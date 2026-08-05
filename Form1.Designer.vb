@@ -186,7 +186,7 @@ Partial Class Form1
         Me.numFileCount.Location = New Point(110, 25)
         Me.numFileCount.Size = New Size(80, 23)
         Me.numFileCount.Minimum = 1
-        Me.numFileCount.Maximum = 2000
+        Me.numFileCount.Maximum = 10000
         Me.numFileCount.Value = 100
 
         Me.lblMinSize.Location = New Point(210, 28)
