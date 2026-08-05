@@ -245,7 +245,8 @@ Public Class Form1
                 Dim filesPerHour = filesPerSec * 3600.0
 
                 progressBar1.Value = 100
-                lblStatus.Text = $"Done. {fileCount} files uploaded in {seconds:F2}s  →  {mbPerSec:F2} MB/s, {filesPerSec:F1} files/s"
+                Dim doneMessage = $"Done. {fileCount} files uploaded in {seconds:F2}s  →  {mbPerSec:F2} MB/s, {filesPerSec:F1} files/s"
+                lblStatus.Text = doneMessage
 
                 AppendResult($"SMALL FILES RESULT: {fileCount} files ({minSizeKB}-{maxSizeKB} KB each, seed {seed})",
                     $"Total size:  {FormatBytes(totalBytes)}",
@@ -256,6 +257,7 @@ Public Class Form1
                 If chkDeleteAfter.Checked Then
                     lblStatus.Text = "Cleaning up test files..."
                     Await DeleteObjectsBatchAsync(client, bucketName, uploadedKeys)
+                    lblStatus.Text = $"{doneMessage}  (cleanup complete)"
                 End If
             End Using
 
