@@ -137,13 +137,16 @@ Public Class Form1
 
                 Dim overallMBps = (totalBytes / (1024.0 * 1024.0)) / totalSeconds
                 Dim overallMbitPerSec = overallMBps * 8.0
+                Dim filesPerSec = _fileSizesMB.Length / totalSeconds
+                Dim filesPerHour = filesPerSec * 3600.0
 
                 lblStatus.Text = $"Series done. {FormatBytes(totalBytes)} in {totalSeconds:F2}s  →  {overallMBps:F2} MB/s ({overallMbitPerSec:F1} Mbps) overall"
 
                 AppendResult($"SERIES RESULT: {_fileSizesMB.Length} files ({String.Join(", ", _fileSizesMB.Select(Function(s) $"{s}MB"))})",
                     $"Total size:  {FormatBytes(totalBytes)}",
                     $"Total time:  {totalSeconds:F2}s",
-                    $"Speed:       {overallMBps:F2} MB/s  ({overallMbitPerSec:F1} Mbps)")
+                    $"Speed:       {overallMBps:F2} MB/s  ({overallMbitPerSec:F1} Mbps)",
+                    $"Rate:        {filesPerSec:F2} files/s  ({filesPerHour:N0} files/hr)")
             End Using
 
         Catch ex As OperationCanceledException
