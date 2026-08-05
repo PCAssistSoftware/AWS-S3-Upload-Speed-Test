@@ -26,6 +26,11 @@ Public Class Form1
     Private _stopwatch As Stopwatch
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Dim iconPath = IO.Path.Combine(AppContext.BaseDirectory, "icon.ico")
+        If IO.File.Exists(iconPath) Then
+            Icon = New Drawing.Icon(iconPath)
+        End If
+
         cboRegion.Items.AddRange(_regions)
         cboRegion.SelectedItem = "eu-north-1"
 
