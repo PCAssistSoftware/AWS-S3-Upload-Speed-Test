@@ -58,13 +58,29 @@ for comparing against your connection's rated speed.
 
 At minimum, the credentials used need `s3:PutObject` on the target bucket/prefix. If
 "Delete test object(s) after upload" is left checked (the default), `s3:DeleteObject` is also
-needed. Example policy scoped to a bucket:
+needed. `s3:GetBucketLocation` is optional but recommended (see below).
+
+Note that `s3:GetBucketLocation` (and `s3:ListBucket`, if used) are **bucket-level** actions —
+they only work when `Resource` is the bare bucket ARN (`arn:aws:s3:::YOUR-BUCKET-NAME`), not
+the object-level wildcard (`arn:aws:s3:::YOUR-BUCKET-NAME/*`) used for `PutObject`/
+`DeleteObject`. Mixing a bucket-level action into an object-scoped statement silently fails —
+the action is listed but never actually matches, so it's still denied. Keep them in separate
+statements:
 
 ```json
 {
     "Version": "2012-10-17",
     "Statement": [
         {
+            "Sid": "BucketLevelAccess",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetBucketLocation"
+            ],
+            "Resource": "arn:aws:s3:::YOUR-BUCKET-NAME"
+        },
+        {
+            "Sid": "ObjectLevelAccess",
             "Effect": "Allow",
             "Action": [
                 "s3:PutObject",
@@ -77,18 +93,7 @@ needed. Example policy scoped to a bucket:
 ```
 
 `s3:GetBucketLocation` is not strictly required — region detection primarily uses a plain HTTP
-header lookup that needs no IAM permission at all. However, if that lookup fails for any reason
-(network issue, non-standard endpoint, etc.) the app falls back to the `GetBucketLocation` API,
-which does need this permission to succeed. Granting it adds robustness but isn't required for
-normal operation:
-
-```json
-{
-    "Effect": "Allow",
-    "Action": "s3:GetBucketLocation",
-    "Resource": "arn:aws:s3:::YOUR-BUCKET-NAME"
-}
-```
-
-Note this uses the bucket-level ARN (no trailing `/*`) since `GetBucketLocation` is a
-bucket-level action, not an object-level one.
+header lookup that needs no IAM permission at all. It only falls back to the
+`GetBucketLocation` API (and therefore this permission) if that header lookup fails for some
+reason (network issue, non-standard endpoint, etc.). Granting it adds robustness but isn't
+required for normal operation.
