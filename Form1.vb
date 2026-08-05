@@ -145,11 +145,11 @@ Public Class Form1
                 Dim filesPerSec = _fileSizesMB.Length / totalSeconds
                 Dim filesPerHour = filesPerSec * 3600.0
 
-                lblStatus.Text = $"Series done. {FormatBytes(totalBytes)} in {totalSeconds:F2}s  →  {overallMBps:F2} MB/s ({overallMbitPerSec:F1} Mbps) overall"
+                lblStatus.Text = $"Series done. {FormatBytes(totalBytes)} in {FormatDuration(totalSeconds)}  →  {overallMBps:F2} MB/s ({overallMbitPerSec:F1} Mbps) overall"
 
                 AppendResult($"SERIES RESULT: {_fileSizesMB.Length} files ({String.Join(", ", _fileSizesMB.Select(Function(s) $"{s}MB"))})",
                     $"Total size:  {FormatBytes(totalBytes)}",
-                    $"Total time:  {totalSeconds:F2}s",
+                    $"Total time:  {FormatDuration(totalSeconds)}",
                     $"Speed:       {overallMBps:F2} MB/s  ({overallMbitPerSec:F1} Mbps)",
                     $"Rate:        {filesPerSec:F2} files/s  ({filesPerHour:N0} files/hr)")
             End Using
@@ -245,12 +245,12 @@ Public Class Form1
                 Dim filesPerHour = filesPerSec * 3600.0
 
                 progressBar1.Value = 100
-                Dim doneMessage = $"Done. {fileCount} files uploaded in {seconds:F2}s  →  {mbPerSec:F2} MB/s, {filesPerSec:F1} files/s"
+                Dim doneMessage = $"Done. {fileCount} files uploaded in {FormatDuration(seconds)}  →  {mbPerSec:F2} MB/s, {filesPerSec:F1} files/s"
                 lblStatus.Text = doneMessage
 
                 AppendResult($"SMALL FILES RESULT: {fileCount} files ({minSizeKB}-{maxSizeKB} KB each, seed {seed})",
                     $"Total size:  {FormatBytes(totalBytes)}",
-                    $"Total time:  {seconds:F2}s",
+                    $"Total time:  {FormatDuration(seconds)}",
                     $"Speed:       {mbPerSec:F2} MB/s  ({mbitPerSec:F1} Mbps)",
                     $"Rate:        {filesPerSec:F1} files/s  ({filesPerHour:N0} files/hr)")
 
@@ -355,11 +355,11 @@ Public Class Form1
         Dim mbitPerSec = mbPerSec * 8.0
 
         progressBar1.Value = 100
-        lblStatus.Text = $"Done. {sizeMB} MB uploaded in {seconds:F2}s  →  {mbPerSec:F2} MB/s ({mbitPerSec:F1} Mbps)"
+        lblStatus.Text = $"Done. {sizeMB} MB uploaded in {FormatDuration(seconds)}  →  {mbPerSec:F2} MB/s ({mbitPerSec:F1} Mbps)"
 
         If logResult Then
             AppendResult($"UPLOAD RESULT: {sizeMB} MB",
-                $"Time:   {seconds:F2}s",
+                $"Time:   {FormatDuration(seconds)}",
                 $"Speed:  {mbPerSec:F2} MB/s  ({mbitPerSec:F1} Mbps)",
                 $"Key:    {key}")
         End If
@@ -470,6 +470,22 @@ Public Class Form1
         Else
             Return $"{bytes} B"
         End If
+    End Function
+
+    ''' Formats a duration for display: plain seconds under a minute, otherwise
+    ''' an hours/minutes/seconds breakdown alongside the precise seconds value.
+    Private Shared Function FormatDuration(seconds As Double) As String
+        If seconds < 60 Then
+            Return $"{seconds:F2}s"
+        End If
+
+        Dim totalSecondsInt = CInt(Math.Round(seconds))
+        Dim hours = totalSecondsInt \ 3600
+        Dim minutes = (totalSecondsInt Mod 3600) \ 60
+        Dim secs = totalSecondsInt Mod 60
+
+        Dim breakdown = If(hours > 0, $"{hours}h {minutes}m {secs}s", $"{minutes}m {secs}s")
+        Return $"{breakdown}  ({seconds:F2}s)"
     End Function
 
 End Class
