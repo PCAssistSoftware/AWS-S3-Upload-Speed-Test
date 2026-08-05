@@ -41,6 +41,8 @@ Partial Class Form1
     Friend WithEvents numMinSizeKB As NumericUpDown
     Friend WithEvents lblMaxSize As Label
     Friend WithEvents numMaxSizeKB As NumericUpDown
+    Friend WithEvents lblSeed As Label
+    Friend WithEvents numSeed As NumericUpDown
 
     Friend WithEvents btnStart As Button
     Friend WithEvents btnRunSeries As Button
@@ -78,6 +80,8 @@ Partial Class Form1
         Me.numMinSizeKB = New NumericUpDown()
         Me.lblMaxSize = New Label()
         Me.numMaxSizeKB = New NumericUpDown()
+        Me.lblSeed = New Label()
+        Me.numSeed = New NumericUpDown()
 
         Me.btnStart = New Button()
         Me.btnRunSeries = New Button()
@@ -172,7 +176,7 @@ Partial Class Form1
 
         ' grpSmallFiles
         Me.grpSmallFiles.Location = New Point(12, 292)
-        Me.grpSmallFiles.Size = New Size(620, 80)
+        Me.grpSmallFiles.Size = New Size(620, 110)
         Me.grpSmallFiles.Text = "Small Files Test Settings"
 
         Me.lblFileCount.Location = New Point(15, 28)
@@ -205,60 +209,72 @@ Partial Class Form1
         Me.numMaxSizeKB.Maximum = 102400
         Me.numMaxSizeKB.Value = 2048
 
+        Me.lblSeed.Location = New Point(15, 58)
+        Me.lblSeed.Size = New Size(90, 20)
+        Me.lblSeed.Text = "Random Seed:"
+
+        Me.numSeed.Location = New Point(110, 55)
+        Me.numSeed.Size = New Size(100, 23)
+        Me.numSeed.Minimum = 1
+        Me.numSeed.Maximum = Integer.MaxValue
+        Me.numSeed.Value = 12345
+
         Me.grpSmallFiles.Controls.Add(Me.lblFileCount)
         Me.grpSmallFiles.Controls.Add(Me.numFileCount)
         Me.grpSmallFiles.Controls.Add(Me.lblMinSize)
         Me.grpSmallFiles.Controls.Add(Me.numMinSizeKB)
         Me.grpSmallFiles.Controls.Add(Me.lblMaxSize)
         Me.grpSmallFiles.Controls.Add(Me.numMaxSizeKB)
+        Me.grpSmallFiles.Controls.Add(Me.lblSeed)
+        Me.grpSmallFiles.Controls.Add(Me.numSeed)
 
         ' buttons / progress / status
-        Me.btnStart.Location = New Point(12, 382)
+        Me.btnStart.Location = New Point(12, 412)
         Me.btnStart.MinimumSize = New Size(140, 30)
         Me.btnStart.AutoSize = True
         Me.btnStart.AutoSizeMode = AutoSizeMode.GrowOnly
         Me.btnStart.Text = "Start Upload Test"
 
-        Me.btnRunSeries.Location = New Point(162, 382)
+        Me.btnRunSeries.Location = New Point(162, 412)
         Me.btnRunSeries.MinimumSize = New Size(170, 30)
         Me.btnRunSeries.AutoSize = True
         Me.btnRunSeries.AutoSizeMode = AutoSizeMode.GrowOnly
         Me.btnRunSeries.Text = "Run Size Series Test"
 
-        Me.btnRunSmallFiles.Location = New Point(342, 382)
+        Me.btnRunSmallFiles.Location = New Point(342, 412)
         Me.btnRunSmallFiles.MinimumSize = New Size(170, 30)
         Me.btnRunSmallFiles.AutoSize = True
         Me.btnRunSmallFiles.AutoSizeMode = AutoSizeMode.GrowOnly
         Me.btnRunSmallFiles.Text = "Run Small Files Test"
 
-        Me.btnCancel.Location = New Point(522, 382)
+        Me.btnCancel.Location = New Point(522, 412)
         Me.btnCancel.MinimumSize = New Size(90, 30)
         Me.btnCancel.AutoSize = True
         Me.btnCancel.AutoSizeMode = AutoSizeMode.GrowOnly
         Me.btnCancel.Text = "Cancel"
         Me.btnCancel.Enabled = False
 
-        Me.progressBar1.Location = New Point(12, 422)
+        Me.progressBar1.Location = New Point(12, 452)
         Me.progressBar1.Size = New Size(620, 23)
 
-        Me.lblStatus.Location = New Point(12, 452)
+        Me.lblStatus.Location = New Point(12, 482)
         Me.lblStatus.Size = New Size(620, 20)
         Me.lblStatus.Text = "Ready."
 
-        Me.txtLog.Location = New Point(12, 478)
+        Me.txtLog.Location = New Point(12, 508)
         Me.txtLog.Size = New Size(620, 260)
         Me.txtLog.Multiline = True
         Me.txtLog.ReadOnly = True
         Me.txtLog.ScrollBars = ScrollBars.Vertical
         Me.txtLog.Font = New Font("Consolas", 9)
 
-        Me.btnClearLog.Location = New Point(552, 744)
+        Me.btnClearLog.Location = New Point(552, 774)
         Me.btnClearLog.Size = New Size(80, 25)
         Me.btnClearLog.Text = "Clear Log"
 
         ' Form1
         Me.AutoScaleMode = AutoScaleMode.Font
-        Me.ClientSize = New Size(644, 780)
+        Me.ClientSize = New Size(644, 810)
         Me.Controls.Add(Me.grpCredentials)
         Me.Controls.Add(Me.grpTest)
         Me.Controls.Add(Me.grpSmallFiles)

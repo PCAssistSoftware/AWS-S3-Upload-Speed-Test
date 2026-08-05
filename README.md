@@ -13,7 +13,10 @@ reports the results.
   back and reports one combined result across the whole run.
 - **Small files test** — uploads a configurable number of files with random sizes within a
   min/max range (e.g. 100 files, 100 KB – 2 MB each), useful for measuring per-request overhead
-  rather than raw bandwidth. Reports files/sec and files/hour alongside throughput.
+  rather than raw bandwidth. Reports files/sec and files/hour alongside throughput. The size of
+  each file is generated from a seeded random sequence (default seed `12345`), so the same
+  file count/size range/seed produces an identical set of file sizes every time — runs from
+  different computers or locations stay comparable as long as the settings match.
 - **Automatic region detection** — resolves the bucket's actual AWS region via the
   `x-amz-bucket-region` HTTP header (no IAM permission required), so uploads don't fail with a
   `PermanentRedirect` error if the wrong region is selected.
@@ -47,8 +50,10 @@ Or open `AWSS3UploadSpeedTest.vbproj` in Visual Studio and run from there.
    - **Start Upload Test** — single file at the selected size.
    - **Run Size Series Test** — sweeps through multiple file sizes and reports one combined
      result.
-   - **Run Small Files Test** — uploads many small files of random size (set count and
-     min/max size in KB) and reports an aggregate result including files/sec and files/hour.
+   - **Run Small Files Test** — uploads many small files of random size (set count, min/max
+     size in KB, and a random seed) and reports an aggregate result including files/sec and
+     files/hour. Keep the count, size range, and seed the same to get comparable results
+     across different computers or locations.
 5. Results are appended to the log panel at the bottom, along with total size, total time,
    MB/s, Mbps, and (for the small files test) upload rate.
 

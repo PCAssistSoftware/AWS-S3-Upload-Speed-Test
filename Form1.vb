@@ -186,6 +186,7 @@ Public Class Form1
                     maxSizeKB = swap
                 End If
                 Dim maxSizeBytes As Long = CLng(maxSizeKB) * 1024L
+                Dim seed = CInt(numSeed.Value)
 
                 Dim prefix = txtKeyPrefix.Text.Trim()
                 If prefix.Length > 0 AndAlso Not prefix.EndsWith("/") Then
@@ -195,16 +196,20 @@ Public Class Form1
 
                 ' One buffer sized to the largest possible file; each upload uses a
                 ' random-length slice of it so every file gets a different random size.
+                ' The buffer content itself doesn't need to be reproducible - only the
+                ' sequence of sizes does, so runs with the same settings are comparable
+                ' across machines. That uses its own seeded generator, below.
                 Dim buffer(maxSizeBytes - 1) As Byte
                 Await Task.Run(Sub() Random.Shared.NextBytes(buffer))
 
+                Dim sizeRandom As New Random(seed)
                 Dim uploadedKeys As New List(Of String)
                 Dim totalBytes As Long = 0
                 Dim overallStopwatch = Stopwatch.StartNew()
 
                 For i = 1 To fileCount
                     _cts.Token.ThrowIfCancellationRequested()
-                    Dim sizeKB = Random.Shared.Next(minSizeKB, maxSizeKB + 1)
+                    Dim sizeKB = sizeRandom.Next(minSizeKB, maxSizeKB + 1)
                     Dim sizeBytes = CLng(sizeKB) * 1024L
                     Dim key = $"{prefix}{batchId}/{Environment.MachineName}-{i:0000}-{sizeKB}KB.bin"
 
@@ -237,7 +242,7 @@ Public Class Form1
                 progressBar1.Value = 100
                 lblStatus.Text = $"Done. {fileCount} files uploaded in {seconds:F2}s  →  {mbPerSec:F2} MB/s, {filesPerSec:F1} files/s"
 
-                AppendResult($"SMALL FILES RESULT: {fileCount} files ({minSizeKB}-{maxSizeKB} KB each)",
+                AppendResult($"SMALL FILES RESULT: {fileCount} files ({minSizeKB}-{maxSizeKB} KB each, seed {seed})",
                     $"Total size:  {FormatBytes(totalBytes)}",
                     $"Total time:  {seconds:F2}s",
                     $"Speed:       {mbPerSec:F2} MB/s  ({mbitPerSec:F1} Mbps)",
