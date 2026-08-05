@@ -4,6 +4,8 @@ A small Windows Forms utility (VB.NET, .NET 10) for benchmarking upload throughp
 Amazon S3 bucket. Generates random test data in memory — no real files are uploaded — and
 reports the results.
 
+![Screenshot](screenshot.png)
+
 ## Features
 
 - **Single upload test** — upload one file of a chosen size (1–500 MB) and see MB/s and Mbps.
