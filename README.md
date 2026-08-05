@@ -76,5 +76,19 @@ needed. Example policy scoped to a bucket:
 }
 ```
 
-`s3:GetBucketLocation` is not required — region detection uses a plain HTTP header lookup that
-needs no IAM permission.
+`s3:GetBucketLocation` is not strictly required — region detection primarily uses a plain HTTP
+header lookup that needs no IAM permission at all. However, if that lookup fails for any reason
+(network issue, non-standard endpoint, etc.) the app falls back to the `GetBucketLocation` API,
+which does need this permission to succeed. Granting it adds robustness but isn't required for
+normal operation:
+
+```json
+{
+    "Effect": "Allow",
+    "Action": "s3:GetBucketLocation",
+    "Resource": "arn:aws:s3:::YOUR-BUCKET-NAME"
+}
+```
+
+Note this uses the bucket-level ARN (no trailing `/*`) since `GetBucketLocation` is a
+bucket-level action, not an object-level one.
